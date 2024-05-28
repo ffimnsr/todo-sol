@@ -12,13 +12,20 @@ describe("todo-sol", () => {
   const authority = provider.wallet;
   const [todoUserProfilePda] = anchor.web3.PublicKey
     .findProgramAddressSync(
-      [Buffer.from("USER_STATE"), authority.publicKey.toBuffer()],
+      [
+        anchor.utils.bytes.utf8.encode("USER_STATE"),
+        authority.publicKey.toBuffer(),
+      ],
       program.programId
     );
 
   const [todoAccountPda] = anchor.web3.PublicKey
     .findProgramAddressSync(
-      [Buffer.from("TODO_STATE"), authority.publicKey.toBuffer(), Uint8Array.from([0])],
+      [
+        anchor.utils.bytes.utf8.encode("TODO_STATE"),
+        authority.publicKey.toBuffer(),
+        Uint8Array.from([0]),
+      ],
       program.programId
     );
 

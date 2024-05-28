@@ -8,7 +8,7 @@ pub mod todo_sol {
 
     pub fn initialize(ctx: Context<Initialize>) -> Result<()> {
         let user_profile = &mut ctx.accounts.user_profile;
-        user_profile.authority = ctx.accounts.authority.key();
+        user_profile.bump = ctx.bumps.user_profile;
         user_profile.last_todo = 0;
         user_profile.todo_count = 0;
 
@@ -19,7 +19,7 @@ pub mod todo_sol {
         let todo_account = &mut ctx.accounts.todo_account;
         let user_profile = &mut ctx.accounts.user_profile;
 
-        todo_account.authority = ctx.accounts.authority.key();
+        todo_account.bump = ctx.bumps.todo_account;
         todo_account.idx = user_profile.last_todo;
         todo_account.content = content;
         todo_account.marked = false;
@@ -72,7 +72,6 @@ pub struct AddTodo<'info> {
         mut,
         seeds = [USER_TAG, authority.key().as_ref()],
         bump,
-        has_one = authority,
     )]
     pub user_profile: Account<'info, UserProfile>,
 
@@ -97,7 +96,6 @@ pub struct MarkTodo<'info> {
         mut,
         seeds = [USER_TAG, authority.key().as_ref()],
         bump,
-        has_one = authority,
     )]
     pub user_profile: Account<'info, UserProfile>,
 
@@ -105,7 +103,6 @@ pub struct MarkTodo<'info> {
         mut,
         seeds = [TODO_TAG, authority.key().as_ref(), &[todo_idx]],
         bump,
-        has_one = authority,
     )]
     pub todo_account: Account<'info, TodoAccount>,
     pub system_program: Program<'info, System>,
@@ -121,7 +118,6 @@ pub struct RemoveTodo<'info> {
         mut,
         seeds = [USER_TAG, authority.key().as_ref()],
         bump,
-        has_one = authority,
     )]
     pub user_profile: Account<'info, UserProfile>,
 
@@ -129,7 +125,6 @@ pub struct RemoveTodo<'info> {
         mut,
         seeds = [TODO_TAG, authority.key().as_ref(), &[todo_idx]],
         bump,
-        has_one = authority,
     )]
     pub todo_account: Account<'info, TodoAccount>,
     pub system_program: Program<'info, System>,
@@ -138,7 +133,7 @@ pub struct RemoveTodo<'info> {
 #[account]
 #[derive(Default)]
 pub struct UserProfile {
-    pub authority: Pubkey,
+    pub bump: u8,
     pub last_todo: u8,
     pub todo_count: u8,
 }
@@ -146,7 +141,7 @@ pub struct UserProfile {
 #[account]
 #[derive(Default)]
 pub struct TodoAccount {
-    pub authority: Pubkey,
+    pub bump: u8,
     pub idx: u8,
     pub content: String,
     pub marked: bool,
