@@ -1,25 +1,52 @@
-import { HStack, IconButton, Spacer, VStack, Text, StackDivider } from "@chakra-ui/react";
+"use client"
+
+import { HStack, IconButton, Spacer, VStack, Text, StackDivider, border, StackProps, IconButtonProps } from "@chakra-ui/react";
+import { FaTrash } from "react-icons/fa";
 
 type Todo = {
   id: string;
   text: string;
 };
 
-function TodoList() {
-  const vStackProps = {
+type Props = {
+  todos: Todo[];
+  removeTodo: (id: string) => void;
+};
+
+function TodoList({ removeTodo }: Props) {
+  const itemListStackProps: StackProps = {
     p: "4",
     w: "100%",
+    borderRadius: "lg",
+    borderWidth: "1px",
+    borderColor: "gray.200",
     alignItems: "stretch",
     divider: <StackDivider />,
   };
-  const todos = [1,1,1,1];
+
+  const itemButtonProps: IconButtonProps = {
+    icon: <FaTrash />,
+    isRound: true,
+    "aria-label": "Delete Todo",
+  };
+
+  const todos: Todo[] = [
+    {
+      id: "1",
+      text: "Buy groceries",
+    },
+    {
+      id: "2",
+      text: "Walk the dog",
+    }
+  ];
   return (
-    <VStack {...vStackProps}>
-      {todos.map(_ => (
-        <HStack p="8">
-          <Text>1</Text>
+    <VStack {...itemListStackProps}>
+      {todos.map(todo => (
+        <HStack key={todo.id} p="8">
+          <Text>{todo.text}</Text>
           <Spacer />
-          <IconButton aria-label="Delete Todo" />
+          <IconButton onClick={() => removeTodo(todo.id)} {...itemButtonProps} />
         </HStack>
       ))}
     </VStack>

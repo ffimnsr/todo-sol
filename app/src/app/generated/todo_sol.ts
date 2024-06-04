@@ -27,11 +27,6 @@ export type TodoSol = {
       ],
       "accounts": [
         {
-          "name": "authority",
-          "writable": true,
-          "signer": true
-        },
-        {
           "name": "userProfile",
           "writable": true,
           "pda": {
@@ -61,6 +56,11 @@ export type TodoSol = {
         {
           "name": "todoAccount",
           "writable": true
+        },
+        {
+          "name": "authority",
+          "writable": true,
+          "signer": true
         },
         {
           "name": "systemProgram",
@@ -88,11 +88,6 @@ export type TodoSol = {
       ],
       "accounts": [
         {
-          "name": "authority",
-          "writable": true,
-          "signer": true
-        },
-        {
           "name": "userProfile",
           "writable": true,
           "pda": {
@@ -120,6 +115,11 @@ export type TodoSol = {
           }
         },
         {
+          "name": "authority",
+          "writable": true,
+          "signer": true
+        },
+        {
           "name": "systemProgram",
           "address": "11111111111111111111111111111111"
         }
@@ -139,11 +139,6 @@ export type TodoSol = {
         110
       ],
       "accounts": [
-        {
-          "name": "authority",
-          "writable": true,
-          "signer": true
-        },
         {
           "name": "userProfile",
           "writable": true,
@@ -174,6 +169,11 @@ export type TodoSol = {
         {
           "name": "todoAccount",
           "writable": true
+        },
+        {
+          "name": "authority",
+          "writable": true,
+          "signer": true
         },
         {
           "name": "systemProgram",
@@ -201,11 +201,6 @@ export type TodoSol = {
       ],
       "accounts": [
         {
-          "name": "authority",
-          "writable": true,
-          "signer": true
-        },
-        {
           "name": "userProfile",
           "writable": true,
           "pda": {
@@ -235,6 +230,11 @@ export type TodoSol = {
         {
           "name": "todoAccount",
           "writable": true
+        },
+        {
+          "name": "authority",
+          "writable": true,
+          "signer": true
         },
         {
           "name": "systemProgram",

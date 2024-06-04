@@ -21,11 +21,6 @@
       ],
       "accounts": [
         {
-          "name": "authority",
-          "writable": true,
-          "signer": true
-        },
-        {
           "name": "user_profile",
           "writable": true,
           "pda": {
@@ -55,6 +50,11 @@
         {
           "name": "todo_account",
           "writable": true
+        },
+        {
+          "name": "authority",
+          "writable": true,
+          "signer": true
         },
         {
           "name": "system_program",
@@ -82,11 +82,6 @@
       ],
       "accounts": [
         {
-          "name": "authority",
-          "writable": true,
-          "signer": true
-        },
-        {
           "name": "user_profile",
           "writable": true,
           "pda": {
@@ -114,6 +109,11 @@
           }
         },
         {
+          "name": "authority",
+          "writable": true,
+          "signer": true
+        },
+        {
           "name": "system_program",
           "address": "11111111111111111111111111111111"
         }
@@ -133,11 +133,6 @@
         110
       ],
       "accounts": [
-        {
-          "name": "authority",
-          "writable": true,
-          "signer": true
-        },
         {
           "name": "user_profile",
           "writable": true,
@@ -168,6 +163,11 @@
         {
           "name": "todo_account",
           "writable": true
+        },
+        {
+          "name": "authority",
+          "writable": true,
+          "signer": true
         },
         {
           "name": "system_program",
@@ -195,11 +195,6 @@
       ],
       "accounts": [
         {
-          "name": "authority",
-          "writable": true,
-          "signer": true
-        },
-        {
           "name": "user_profile",
           "writable": true,
           "pda": {
@@ -229,6 +224,11 @@
         {
           "name": "todo_account",
           "writable": true
+        },
+        {
+          "name": "authority",
+          "writable": true,
+          "signer": true
         },
         {
           "name": "system_program",

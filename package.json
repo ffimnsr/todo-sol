@@ -1,7 +1,7 @@
 {
   "license": "UNLICENSED",
   "scripts": {
-    "generate:idl": "anchor build --idl $PWD/app/src/app/generated/idl --idl-ts $PWD/app/src/app/generated",
+    "generate:idl": "anchor build -i $PWD/app/src/app/generated/idl -t $PWD/app/src/app/generated",
     "lint:fix": "prettier */*.js \"*/**/*{.js,.ts}\" -w",
     "lint": "prettier */*.js \"*/**/*{.js,.ts}\" --check"
   },
