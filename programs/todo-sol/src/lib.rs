@@ -1,6 +1,6 @@
 use anchor_lang::prelude::*;
 
-declare_id!("6TNGj9dN1huS7gawyrFMiRUMtVSXrAVeMDzin9drMcqm");
+declare_id!("9fGSgNHWFoCqBz5KNtLYL77sVheGMtad3KpNp4d48K2N");
 
 #[program]
 pub mod todo_sol {
@@ -11,14 +11,16 @@ pub mod todo_sol {
         user_profile.bump = ctx.bumps.user_profile;
         user_profile.last_todo = 0;
         user_profile.todo_count = 0;
-
+        msg!("User profile initialized.");
         Ok(())
     }
 
     pub fn add_todo(ctx: Context<AddTodo>, content: String) -> Result<()> {
         let todo_account = &mut ctx.accounts.todo_account;
         let user_profile = &mut ctx.accounts.user_profile;
+        require!(content.as_bytes().len() < 200, TodoError::ContentTooLong);
 
+        todo_account.author = ctx.accounts.authority.key();
         todo_account.bump = ctx.bumps.todo_account;
         todo_account.idx = user_profile.last_todo;
         todo_account.content = content;
@@ -26,6 +28,7 @@ pub mod todo_sol {
 
         user_profile.last_todo = user_profile.last_todo.checked_add(1).unwrap();
         user_profile.todo_count = user_profile.todo_count.checked_add(1).unwrap();
+        msg!("Todo added.");
         Ok(())
     }
 
@@ -35,6 +38,7 @@ pub mod todo_sol {
         require_gte!(todo_idx, 0, TodoError::NotAllowed);
 
         todo_account.marked = true;
+        msg!("Todo marked.");
         Ok(())
     }
 
@@ -43,27 +47,10 @@ pub mod todo_sol {
         require_gte!(todo_idx, 0, TodoError::NotAllowed);
 
         user_profile.todo_count = user_profile.todo_count.checked_sub(1).unwrap();
+        msg!("Todo removed.");
         Ok(())
     }
 }
-
-#[account]
-#[derive(Default)]
-pub struct UserProfile {
-    pub bump: u8,
-    pub last_todo: u8,
-    pub todo_count: u8,
-}
-
-#[account]
-#[derive(Default)]
-pub struct TodoAccount {
-    pub bump: u8,
-    pub idx: u8,
-    pub content: String,
-    pub marked: bool,
-}
-
 
 #[derive(Accounts)]
 pub struct Initialize<'info> {
@@ -78,7 +65,6 @@ pub struct Initialize<'info> {
 
     #[account(mut)]
     pub authority: Signer<'info>,
-
     pub system_program: Program<'info, System>,
 }
 
@@ -102,7 +88,6 @@ pub struct AddTodo<'info> {
 
     #[account(mut)]
     pub authority: Signer<'info>,
-
     pub system_program: Program<'info, System>,
 }
 
@@ -150,6 +135,22 @@ pub struct RemoveTodo<'info> {
     pub system_program: Program<'info, System>,
 }
 
+#[account]
+pub struct UserProfile {
+    pub bump: u8,
+    pub last_todo: u8,
+    pub todo_count: u8,
+}
+
+#[account]
+pub struct TodoAccount {
+    pub author: Pubkey,
+    pub bump: u8,
+    pub idx: u8,
+    pub content: String,
+    pub marked: bool,
+}
+
 #[constant]
 pub const USER_TAG: &[u8] = b"USER_STATE";
 
@@ -164,6 +165,8 @@ pub enum TodoError {
     NotAllowed,
     #[msg("Math overflow.")]
     MathOverflow,
+    #[msg("Content is too long.")]
+    ContentTooLong,
     #[msg("The todo is already marked.")]
     AlreadyMarked,
 }

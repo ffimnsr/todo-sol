@@ -4,8 +4,11 @@
 resolution = true
 skip-lint = false
 
+[programs.devnet]
+todo_sol = "9fGSgNHWFoCqBz5KNtLYL77sVheGMtad3KpNp4d48K2N"
+
 [programs.localnet]
-todo_sol = "6TNGj9dN1huS7gawyrFMiRUMtVSXrAVeMDzin9drMcqm"
+todo_sol = "9fGSgNHWFoCqBz5KNtLYL77sVheGMtad3KpNp4d48K2N"
 
 [registry]
 url = "https://api.apr.dev"

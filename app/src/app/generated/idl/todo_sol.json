@@ -1,5 +1,5 @@
 {
-  "address": "6TNGj9dN1huS7gawyrFMiRUMtVSXrAVeMDzin9drMcqm",
+  "address": "9fGSgNHWFoCqBz5KNtLYL77sVheGMtad3KpNp4d48K2N",
   "metadata": {
     "name": "todo_sol",
     "version": "0.1.0",
@@ -289,6 +289,11 @@
     },
     {
       "code": 6003,
+      "name": "ContentTooLong",
+      "msg": "Content is too long."
+    },
+    {
+      "code": 6004,
       "name": "AlreadyMarked",
       "msg": "The todo is already marked."
     }
@@ -299,6 +304,10 @@
       "type": {
         "kind": "struct",
         "fields": [
+          {
+            "name": "author",
+            "type": "pubkey"
+          },
           {
             "name": "bump",
             "type": "u8"

@@ -2,6 +2,7 @@
   "license": "UNLICENSED",
   "scripts": {
     "generate:idl": "anchor build -i $PWD/app/src/app/generated/idl -t $PWD/app/src/app/generated",
+    "deploy": "anchor deploy --provider.cluster devnet",
     "lint:fix": "prettier */*.js \"*/**/*{.js,.ts}\" -w",
     "lint": "prettier */*.js \"*/**/*{.js,.ts}\" --check"
   },

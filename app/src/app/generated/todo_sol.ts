@@ -5,7 +5,7 @@
  * IDL can be found at `target/idl/todo_sol.json`.
  */
 export type TodoSol = {
-  "address": "6TNGj9dN1huS7gawyrFMiRUMtVSXrAVeMDzin9drMcqm",
+  "address": "9fGSgNHWFoCqBz5KNtLYL77sVheGMtad3KpNp4d48K2N",
   "metadata": {
     "name": "todoSol",
     "version": "0.1.0",
@@ -295,6 +295,11 @@ export type TodoSol = {
     },
     {
       "code": 6003,
+      "name": "contentTooLong",
+      "msg": "Content is too long."
+    },
+    {
+      "code": 6004,
       "name": "alreadyMarked",
       "msg": "The todo is already marked."
     }
@@ -305,6 +310,10 @@ export type TodoSol = {
       "type": {
         "kind": "struct",
         "fields": [
+          {
+            "name": "author",
+            "type": "pubkey"
+          },
           {
             "name": "bump",
             "type": "u8"

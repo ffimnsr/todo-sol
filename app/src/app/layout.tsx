@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Rubik } from "next/font/google";
 import { Providers } from "./providers";
+import "@solana/wallet-adapter-react-ui/styles.css";
 
 const rubik = Rubik({
   subsets: ["latin"],
