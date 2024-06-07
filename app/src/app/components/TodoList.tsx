@@ -50,7 +50,7 @@ function TodoList({ todos, markTodo, unmarkTodo, removeTodo }: Props) {
             : <IconButton onClick={() => markTodo(todo.publicKey, todo.account.idx)} {...unmarkedItemButtonProps} />}
           <Text marginLeft={4}>{todo.account.content}</Text>
           <Spacer />
-          <IconButton onClick={() => removeTodo(todo.publicKey, todo.account.idx)} {...removeItemButtonProps} />
+          <IconButton {...removeItemButtonProps} />
         </HStack>
       ))}
     </VStack>
