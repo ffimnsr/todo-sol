@@ -70,6 +70,19 @@ describe("todo-sol", () => {
     expect(todoAccount.content).to.eq("Buy milk");
   });
 
+  it("Can unmark a task as not yet done", async () => {
+    const tx = await program.methods
+      .unmarkTodo(0)
+      .accounts({ todoAccount: todoAccountPda })
+      .rpc();
+    console.log("Your transaction signature", tx);
+
+    const todoAccount = await program.account.todoAccount.fetch(todoAccountPda);
+    expect(todoAccount.idx).to.eq(0);
+    expect(todoAccount.marked).to.false;
+    expect(todoAccount.content).to.eq("Buy milk");
+  });
+
   it("Can remove a task", async () => {
     const tx = await program.methods
       .removeTodo(0)
@@ -79,7 +92,6 @@ describe("todo-sol", () => {
 
     const todoAccount = await program.account.todoAccount.fetch(todoAccountPda);
     expect(todoAccount.idx).to.eq(0);
-    expect(todoAccount.marked).to.true;
     expect(todoAccount.content).to.eq("Buy milk");
 
     const userProfile = await program.account.userProfile.fetch(todoUserProfilePda);

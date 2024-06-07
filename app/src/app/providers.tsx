@@ -1,7 +1,7 @@
 "use client"
 
 import { useCallback, useMemo } from "react";
-import { ChakraProvider, ColorModeScript } from "@chakra-ui/react";
+import { ChakraProvider } from "@chakra-ui/react";
 import { WalletAdapterNetwork, WalletError } from "@solana/wallet-adapter-base";
 import { ConnectionProvider, WalletProvider } from "@solana/wallet-adapter-react";
 import { clusterApiUrl } from "@solana/web3.js";
@@ -26,7 +26,6 @@ export function Providers({ children }: { children: React.ReactNode }) {
   ], [network]);
   return (
     <ChakraProvider>
-      <ColorModeScript initialColorMode="light" />
       <ConnectionProvider endpoint={endpoint}>
         <WalletProvider wallets={wallets} autoConnect={true} onError={onError}>
           <WalletModalProvider>

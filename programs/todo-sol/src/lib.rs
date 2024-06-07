@@ -1,6 +1,6 @@
 use anchor_lang::prelude::*;
 
-declare_id!("9fGSgNHWFoCqBz5KNtLYL77sVheGMtad3KpNp4d48K2N");
+declare_id!("3ibA1xfXF5otPPpL94eoqrSDwVaYrQRz36zAQqtbAzL5");
 
 #[program]
 pub mod todo_sol {
@@ -11,7 +11,7 @@ pub mod todo_sol {
         user_profile.bump = ctx.bumps.user_profile;
         user_profile.last_todo = 0;
         user_profile.todo_count = 0;
-        msg!("User profile initialized.");
+
         Ok(())
     }
 
@@ -28,7 +28,6 @@ pub mod todo_sol {
 
         user_profile.last_todo = user_profile.last_todo.checked_add(1).unwrap();
         user_profile.todo_count = user_profile.todo_count.checked_add(1).unwrap();
-        msg!("Todo added.");
         Ok(())
     }
 
@@ -38,7 +37,15 @@ pub mod todo_sol {
         require_gte!(todo_idx, 0, TodoError::NotAllowed);
 
         todo_account.marked = true;
-        msg!("Todo marked.");
+        Ok(())
+    }
+
+    pub fn unmark_todo(ctx: Context<UnmarkTodo>, todo_idx: u8) -> Result<()> {
+        let todo_account = &mut ctx.accounts.todo_account;
+        require!(todo_account.marked, TodoError::AlreadyUnmarked);
+        require_gte!(todo_idx, 0, TodoError::NotAllowed);
+
+        todo_account.marked = false;
         Ok(())
     }
 
@@ -47,7 +54,6 @@ pub mod todo_sol {
         require_gte!(todo_idx, 0, TodoError::NotAllowed);
 
         user_profile.todo_count = user_profile.todo_count.checked_sub(1).unwrap();
-        msg!("Todo removed.");
         Ok(())
     }
 }
@@ -56,7 +62,7 @@ pub mod todo_sol {
 pub struct Initialize<'info> {
     #[account(
         init,
-        seeds =[USER_TAG, authority.key().as_ref()],
+        seeds = [USER_TAG, authority.key().as_ref()],
         bump,
         payer = authority,
         space = 8 + std::mem::size_of::<UserProfile>(),
@@ -97,14 +103,36 @@ pub struct MarkTodo<'info> {
     #[account(
         mut,
         seeds = [USER_TAG, authority.key().as_ref()],
-        bump,
+        bump = user_profile.bump,
     )]
     pub user_profile: Account<'info, UserProfile>,
 
     #[account(
         mut,
         seeds = [TODO_TAG, authority.key().as_ref(), &[todo_idx]],
-        bump,
+        bump = todo_account.bump,
+    )]
+    pub todo_account: Account<'info, TodoAccount>,
+
+    #[account(mut)]
+    pub authority: Signer<'info>,
+    pub system_program: Program<'info, System>,
+}
+
+#[derive(Accounts)]
+#[instruction(todo_idx: u8)]
+pub struct UnmarkTodo<'info> {
+    #[account(
+        mut,
+        seeds = [USER_TAG, authority.key().as_ref()],
+        bump = user_profile.bump,
+    )]
+    pub user_profile: Account<'info, UserProfile>,
+
+    #[account(
+        mut,
+        seeds = [TODO_TAG, authority.key().as_ref(), &[todo_idx]],
+        bump = todo_account.bump,
     )]
     pub todo_account: Account<'info, TodoAccount>,
 
@@ -119,14 +147,14 @@ pub struct RemoveTodo<'info> {
     #[account(
         mut,
         seeds = [USER_TAG, authority.key().as_ref()],
-        bump,
+        bump = user_profile.bump,
     )]
     pub user_profile: Account<'info, UserProfile>,
 
     #[account(
         mut,
         seeds = [TODO_TAG, authority.key().as_ref(), &[todo_idx]],
-        bump,
+        bump = todo_account.bump,
     )]
     pub todo_account: Account<'info, TodoAccount>,
 
@@ -169,4 +197,6 @@ pub enum TodoError {
     ContentTooLong,
     #[msg("The todo is already marked.")]
     AlreadyMarked,
+    #[msg("The todo is already unmarked.")]
+    AlreadyUnmarked,
 }

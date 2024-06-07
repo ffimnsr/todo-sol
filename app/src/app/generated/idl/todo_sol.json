@@ -1,5 +1,5 @@
 {
-  "address": "9fGSgNHWFoCqBz5KNtLYL77sVheGMtad3KpNp4d48K2N",
+  "address": "3ibA1xfXF5otPPpL94eoqrSDwVaYrQRz36zAQqtbAzL5",
   "metadata": {
     "name": "todo_sol",
     "version": "0.1.0",
@@ -241,6 +241,67 @@
           "type": "u8"
         }
       ]
+    },
+    {
+      "name": "unmark_todo",
+      "discriminator": [
+        195,
+        238,
+        237,
+        86,
+        180,
+        108,
+        141,
+        51
+      ],
+      "accounts": [
+        {
+          "name": "user_profile",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  85,
+                  83,
+                  69,
+                  82,
+                  95,
+                  83,
+                  84,
+                  65,
+                  84,
+                  69
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "authority"
+              }
+            ]
+          }
+        },
+        {
+          "name": "todo_account",
+          "writable": true
+        },
+        {
+          "name": "authority",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "todo_idx",
+          "type": "u8"
+        }
+      ]
     }
   ],
   "accounts": [
@@ -296,6 +357,11 @@
       "code": 6004,
       "name": "AlreadyMarked",
       "msg": "The todo is already marked."
+    },
+    {
+      "code": 6005,
+      "name": "AlreadyUnmarked",
+      "msg": "The todo is already unmarked."
     }
   ],
   "types": [

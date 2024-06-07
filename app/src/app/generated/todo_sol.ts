@@ -5,7 +5,7 @@
  * IDL can be found at `target/idl/todo_sol.json`.
  */
 export type TodoSol = {
-  "address": "9fGSgNHWFoCqBz5KNtLYL77sVheGMtad3KpNp4d48K2N",
+  "address": "3ibA1xfXF5otPPpL94eoqrSDwVaYrQRz36zAQqtbAzL5",
   "metadata": {
     "name": "todoSol",
     "version": "0.1.0",
@@ -247,6 +247,67 @@ export type TodoSol = {
           "type": "u8"
         }
       ]
+    },
+    {
+      "name": "unmarkTodo",
+      "discriminator": [
+        195,
+        238,
+        237,
+        86,
+        180,
+        108,
+        141,
+        51
+      ],
+      "accounts": [
+        {
+          "name": "userProfile",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  85,
+                  83,
+                  69,
+                  82,
+                  95,
+                  83,
+                  84,
+                  65,
+                  84,
+                  69
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "authority"
+              }
+            ]
+          }
+        },
+        {
+          "name": "todoAccount",
+          "writable": true
+        },
+        {
+          "name": "authority",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "systemProgram",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "todoIdx",
+          "type": "u8"
+        }
+      ]
     }
   ],
   "accounts": [
@@ -302,6 +363,11 @@ export type TodoSol = {
       "code": 6004,
       "name": "alreadyMarked",
       "msg": "The todo is already marked."
+    },
+    {
+      "code": 6005,
+      "name": "alreadyUnmarked",
+      "msg": "The todo is already unmarked."
     }
   ],
   "types": [

@@ -58,15 +58,21 @@ export function useTodo() {
           return;
         }
 
-        console.log(pda.toBase58());
-        console.log(profileAccount.lastTodo);
-        console.log(profileAccount.todoCount);
         setLastTodo(profileAccount.lastTodo);
         setInitialized(true);
-        const todoAccounts = await program.account.todoAccount.all(
-          [authorOnly(anchorWallet.publicKey.toBase58())]
-        );
-        setTodos(todoAccounts);
+
+        let count = 0;
+        while (count < profileAccount.todoCount) {
+          const todoAccounts = await program.account.todoAccount.all(
+            [authorOnly(anchorWallet.publicKey.toBase58())]
+          );
+
+          count = todoAccounts.length;
+          console.log(count, profileAccount.todoCount);
+          if (count === profileAccount.todoCount) {
+            setTodos(todoAccounts);
+          }
+        }
       } catch (err) {
         setInitialized(false);
         setTodos([]);
@@ -83,11 +89,6 @@ export function useTodo() {
 
     try {
       setTransactionPending(true);
-      const [pda, bump] = PublicKey.findProgramAddressSync(
-        [utf8.encode(USER_TAG), anchorWallet.publicKey.toBuffer()],
-        program.programId,
-      );
-
       const tx = await program.methods
         .initialize()
         .accounts({
@@ -113,32 +114,35 @@ export function useTodo() {
     }
   };
 
-  const addTodo = async () => {
+  const addTodo = async (content: string) => {
     if (!program || !anchorWallet) return;
 
     try {
       setTransactionPending(true);
-      const [profilePda, profileBump] = PublicKey.findProgramAddressSync(
-        [utf8.encode(USER_TAG), anchorWallet.publicKey.toBuffer()],
-        program.programId,
-      );
       const [todoPda, todoBump] = PublicKey.findProgramAddressSync(
         [utf8.encode(TODO_TAG), anchorWallet.publicKey.toBuffer(), Buffer.from([lastTodo])],
         program.programId,
       );
-      const content = prompt("Enter todo content");
+
       if (!content) {
         setTransactionPending(false);
         return;
       }
 
-      await program.methods
+      const tx = await program.methods
         .addTodo(content)
         .accounts({
           todoAccount: todoPda,
           authority: anchorWallet.publicKey,
         })
-        .rpc()
+        .rpc();
+
+      const resp = await connection.getLatestBlockhash();
+      await connection.confirmTransaction({
+        signature: tx,
+        blockhash: resp.blockhash,
+        lastValidBlockHeight: resp.lastValidBlockHeight,
+      }, "confirmed");
 
       toast({
         title: "Todo added",
@@ -164,11 +168,6 @@ export function useTodo() {
     try {
       setTransactionPending(true);
       setLoading(true);
-      const [pda, bump] = PublicKey.findProgramAddressSync(
-        [utf8.encode(USER_TAG), anchorWallet.publicKey.toBuffer()],
-        program.programId,
-      );
-
       await program.methods
         .markTodo(todoIdx)
         .accounts({
@@ -196,16 +195,45 @@ export function useTodo() {
     }
   };
 
+  const unmarkTodo = async (todoPda: PublicKey, todoIdx: number) => {
+    if (!program || !anchorWallet) return;
+
+    try {
+      setTransactionPending(true);
+      setLoading(true);
+      await program.methods
+        .unmarkTodo(todoIdx)
+        .accounts({
+          todoAccount: todoPda,
+          authority: anchorWallet.publicKey,
+        })
+        .rpc();
+
+      toast({
+        title: "Unmarking todo",
+        description: "Successfully unmarked todo.",
+        status: "info",
+        isClosable: true,
+      });
+    } catch (err) {
+      toast({
+        title: "Error unmarking todo",
+        description: (err as Error).toString(),
+        status: "error",
+        isClosable: true,
+      });
+    } finally {
+      setLoading(false);
+      setTransactionPending(false);
+    }
+  };
+
   const removeTodo = async (todoPda: PublicKey, todoIdx: number) => {
     if (!program || !anchorWallet) return;
 
     try {
       setTransactionPending(true);
       setLoading(true);
-      const [pda, bump] = PublicKey.findProgramAddressSync(
-        [utf8.encode(USER_TAG), anchorWallet.publicKey.toBuffer()],
-        program.programId,
-      );
 
       await program.methods
         .removeTodo(todoIdx)
@@ -241,9 +269,11 @@ export function useTodo() {
     initialized,
     loading,
     transactionPending,
+    todos,
     initializeUser,
     addTodo,
     markTodo,
+    unmarkTodo,
     removeTodo,
     notCompletedTodos,
     completedTodos,

@@ -5,10 +5,10 @@ resolution = true
 skip-lint = false
 
 [programs.devnet]
-todo_sol = "9fGSgNHWFoCqBz5KNtLYL77sVheGMtad3KpNp4d48K2N"
+todo_sol = "3ibA1xfXF5otPPpL94eoqrSDwVaYrQRz36zAQqtbAzL5"
 
 [programs.localnet]
-todo_sol = "9fGSgNHWFoCqBz5KNtLYL77sVheGMtad3KpNp4d48K2N"
+todo_sol = "3ibA1xfXF5otPPpL94eoqrSDwVaYrQRz36zAQqtbAzL5"
 
 [registry]
 url = "https://api.apr.dev"

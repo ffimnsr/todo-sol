@@ -9,10 +9,11 @@ import { PublicKey } from '@solana/web3.js';
 type Props = {
   todos: ProgramAccount<Todo>[];
   markTodo: (todoPda: PublicKey, todoIdx: number) => Promise<void>;
+  unmarkTodo: (todoPda: PublicKey, todoIdx: number) => Promise<void>;
   removeTodo: (todoPda: PublicKey, todoIdx: number) => Promise<void>;
 };
 
-function TodoList({ todos, markTodo, removeTodo }: Props) {
+function TodoList({ todos, markTodo, unmarkTodo, removeTodo }: Props) {
   const itemListStackProps: StackProps = {
     p: "2",
     w: "100%",
@@ -40,13 +41,12 @@ function TodoList({ todos, markTodo, removeTodo }: Props) {
     "aria-label": "Marked Todo",
   };
 
-  console.log(todos);
   return (
     <VStack {...itemListStackProps}>
       {todos.map(todo => (
         <HStack key={todo.account.idx} p="2">
           {todo.account.marked ?
-            <IconButton {...markedItemButtonProps} />
+            <IconButton onClick={() => unmarkTodo(todo.publicKey, todo.account.idx)} {...markedItemButtonProps} />
             : <IconButton onClick={() => markTodo(todo.publicKey, todo.account.idx)} {...unmarkedItemButtonProps} />}
           <Text marginLeft={4}>{todo.account.content}</Text>
           <Spacer />
